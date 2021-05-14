@@ -1,0 +1,74 @@
+
+program code
+
+
+build/program-x86:     file format elf32-i386
+
+
+Disassembly of section my_text:
+
+080ac1b1 <subroutine_fnc>:
+ 80ac1b1:	55                   	push   %ebp
+ 80ac1b2:	89 e5                	mov    %esp,%ebp
+ 80ac1b4:	83 7d 08 5a          	cmpl   $0x5a,0x8(%ebp)
+ 80ac1b8:	7f 06                	jg     80ac1c0 <subroutine_fnc+0xf>
+ 80ac1ba:	83 7d 08 40          	cmpl   $0x40,0x8(%ebp)
+ 80ac1be:	7f 05                	jg     80ac1c5 <subroutine_fnc+0x14>
+ 80ac1c0:	8b 45 08             	mov    0x8(%ebp),%eax
+ 80ac1c3:	eb 14                	jmp    80ac1d9 <subroutine_fnc+0x28>
+ 80ac1c5:	a1 e0 bf 0d 08       	mov    0x80dbfe0,%eax
+ 80ac1ca:	83 c0 01             	add    $0x1,%eax
+ 80ac1cd:	a3 e0 bf 0d 08       	mov    %eax,0x80dbfe0
+ 80ac1d2:	83 45 08 20          	addl   $0x20,0x8(%ebp)
+ 80ac1d6:	8b 45 08             	mov    0x8(%ebp),%eax
+ 80ac1d9:	5d                   	pop    %ebp
+ 80ac1da:	c3                   	ret    
+
+080ac1db <toplevel_fnc>:
+ 80ac1db:	55                   	push   %ebp
+ 80ac1dc:	89 e5                	mov    %esp,%ebp
+ 80ac1de:	53                   	push   %ebx
+ 80ac1df:	83 ec 10             	sub    $0x10,%esp
+ 80ac1e2:	eb 36                	jmp    80ac21a <toplevel_fnc+0x3f>
+ 80ac1e4:	0f b6 45 f7          	movzbl -0x9(%ebp),%eax
+ 80ac1e8:	0f be c0             	movsbl %al,%eax
+ 80ac1eb:	50                   	push   %eax
+ 80ac1ec:	e8 c0 ff ff ff       	call   80ac1b1 <subroutine_fnc>
+ 80ac1f1:	83 c4 04             	add    $0x4,%esp
+ 80ac1f4:	88 45 f7             	mov    %al,-0x9(%ebp)
+ 80ac1f7:	bb 01 00 00 00       	mov    $0x1,%ebx
+ 80ac1fc:	8d 45 f7             	lea    -0x9(%ebp),%eax
+ 80ac1ff:	ba 01 00 00 00       	mov    $0x1,%edx
+ 80ac204:	89 c1                	mov    %eax,%ecx
+ 80ac206:	b8 04 00 00 00       	mov    $0x4,%eax
+ 80ac20b:	cd 80                	int    $0x80
+ 80ac20d:	89 c3                	mov    %eax,%ebx
+ 80ac20f:	89 d8                	mov    %ebx,%eax
+ 80ac211:	89 45 f8             	mov    %eax,-0x8(%ebp)
+ 80ac214:	83 7d f8 00          	cmpl   $0x0,-0x8(%ebp)
+ 80ac218:	78 25                	js     80ac23f <toplevel_fnc+0x64>
+ 80ac21a:	bb 00 00 00 00       	mov    $0x0,%ebx
+ 80ac21f:	8d 45 f7             	lea    -0x9(%ebp),%eax
+ 80ac222:	ba 01 00 00 00       	mov    $0x1,%edx
+ 80ac227:	89 c1                	mov    %eax,%ecx
+ 80ac229:	b8 03 00 00 00       	mov    $0x3,%eax
+ 80ac22e:	cd 80                	int    $0x80
+ 80ac230:	89 c3                	mov    %eax,%ebx
+ 80ac232:	89 d8                	mov    %ebx,%eax
+ 80ac234:	89 45 f8             	mov    %eax,-0x8(%ebp)
+ 80ac237:	83 7d f8 01          	cmpl   $0x1,-0x8(%ebp)
+ 80ac23b:	74 a7                	je     80ac1e4 <toplevel_fnc+0x9>
+ 80ac23d:	eb 01                	jmp    80ac240 <toplevel_fnc+0x65>
+ 80ac23f:	90                   	nop
+ 80ac240:	a1 e0 bf 0d 08       	mov    0x80dbfe0,%eax
+ 80ac245:	8b 5d fc             	mov    -0x4(%ebp),%ebx
+ 80ac248:	c9                   	leave  
+ 80ac249:	c3                   	ret    
+
+program data
+
+
+build/program-x86:     file format elf32-i386
+
+Contents of section my_data:
+ 80dbfe0 00000000                             ....            
