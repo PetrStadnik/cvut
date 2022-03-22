@@ -1,5 +1,6 @@
 from blockworld import BlockWorld
 from queue import PriorityQueue
+import numpy as np
 
 
 class BlockWorldHeuristic(BlockWorld):
@@ -7,12 +8,25 @@ class BlockWorldHeuristic(BlockWorld):
         BlockWorld.__init__(self, num_blocks, state)
 
     def heuristic(self, goal):
-        self_state = self.get_state()
-        goal_state = goal.get_state()
+        self_state = list(self.get_state())
+        goal_state = list(goal.get_state())
+        val = 0
+        #print(self_state)
+        #print(goal_state)
 
         # ToDo. Implement the heuristic here.
-
-        return 0.
+        for i in range(0, len(self_state)):
+            self_state[i] = list(self_state[i])
+            #print("len-"+str(len(self_state[i])))
+            for j in range(0, len(self_state[i])):
+                for g in range(0, len(goal_state)):
+                    for h in range(0, len(list(goal_state[g]))):
+                        if self_state[i][j] == goal_state[g][h]:
+                            val += abs(j - h)
+                           # print(abs(j - h))
+        #print(self_state)
+        #print(goal_state)
+        return val
 
 
 class AStar():
@@ -38,21 +52,30 @@ class AStar():
             for action, neighbor in state.get_neighbors():
                 next_state = state.clone()
                 next_state.apply(action)
+                path.append((state, action, next_state))
+                print(state)
                 next_state.priority = BlockWorldHeuristic.heuristic(next_state, goal)
-                #print(state)
+                # print(state)
 
                 if next_state == goal:
-                    print(next_state)
-                    path.append(action)
-                    print(path)
-                    return path
+                    r_path = list()
+                    h = goal
+                    #print(path)
+                    stop = 0
+                    while h != start and stop < 100:
+                        stop += 1
+                        for p in path:
+                            if p[2] == h:
+                                r_path.append(p[1])
+                                #print("tisknu p " + str(p))
+                                #print(p[0].clone())
+                                h = p[0]
+                                #print(p)
+                                #path.remove(p)
+                    print(r_path[::-1])
+                    return r_path[::-1]
                 else:
                     opened.put((next_state.priority, next_state))
-
-        # You can access all actions and neighbors like this:
-        print("neighbor")
-        for action, neighbor in start.get_neighbors():
-            print(str(action) + " ---" + str(neighbor))
 
         return None
 
