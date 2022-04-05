@@ -19,7 +19,7 @@ class QLearning():
 	# don't modify the methods' signatures!
 	def __init__(self, env: BlockWorldEnv):
 		self.env = env
-		self.epsilon = 1
+		self.epsilon = 0.9
 		self.exploration_policy = EpsilonGreedyPolicy(self.epsilon)
 		self.alpha_init = 0.5
 		self.gamma = 0.9
@@ -31,9 +31,7 @@ class QLearning():
 
 	def train(self):
 		# Use BlockWorldEnv to simulate the environment with reset() and step() methods.
-		st = 0
-		while st < 73:
-			st+=1
+		for ig in range(73):
 			s = self.env.reset()
 			while s[1] in self.goalDict:
 				s = self.env.reset()
@@ -66,15 +64,21 @@ class QLearning():
 					stavy_dict[s[0]][a] = stavy_dict[s[0]][a] + val - self.get_alpha() * stavy_dict[s[0]][a]
 					s = s_next
 			self.goalDict[s[1]] = stavy_dict
-			print(str(st)+ "--- " + str(s[1]))
+			#print(str(ig)+ "--- " + str(s[1]))
 
 		# s = self.env.reset()
 		# s_, r, done = self.env.step(a)
 
 	def act(self, s):
-		stavy_dict = self.goalDict[s[1]]
-		akce_dict = stavy_dict[s[0]]
-		action = max(akce_dict, key=akce_dict.get)
+		if s[1] in self.goalDict:
+			stavy_dict = self.goalDict[s[1]]
+			if s[0] in stavy_dict:
+				akce_dict = stavy_dict[s[0]]
+				action = max(akce_dict, key=akce_dict.get)
+			else:
+				action = random.choice(s[0].get_actions())
+		else:
+			action = random.choice(s[0].get_actions())
 		return action
 
 if __name__ == '__main__':
