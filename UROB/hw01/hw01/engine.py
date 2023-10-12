@@ -93,8 +93,8 @@ class Tensor:
         out = Tensor(self.data + other.data, (self, other), '+')
 
         def _backward():
-            self.grad += reshape_gradient(1 * out.grad, self.data.shape)
-            other.grad += reshape_gradient(1 * out.grad, self.data.shape)
+            self.grad += 1 * out.grad
+            other.grad += 1 * out.grad
 
         out._backward = _backward
         return out
@@ -104,8 +104,8 @@ class Tensor:
         out = Tensor(self.data * other.data, (self, other), '*')
 
         def _backward():
-            self.grad += reshape_gradient(other.data * out.grad, self.data.shape)
-            other.grad += reshape_gradient(self.data * out.grad, self.data.shape)
+            self.grad += other.data * out.grad
+            other.grad += self.data * out.grad
 
         out._backward = _backward
         return out
