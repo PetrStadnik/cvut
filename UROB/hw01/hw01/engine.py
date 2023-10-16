@@ -93,8 +93,8 @@ class Tensor:
         out = Tensor(self.data + other.data, (self, other), '+')
 
         def _backward():
-            self.grad += 1 * out.grad
-            other.grad += 1 * out.grad
+            self.grad += reshape_gradient(1 * out.grad, self.grad.shape)
+            other.grad += reshape_gradient(1 * out.grad, other.grad.shape)
 
         out._backward = _backward
         return out
@@ -104,8 +104,8 @@ class Tensor:
         out = Tensor(self.data * other.data, (self, other), '*')
 
         def _backward():
-            self.grad += other.data * out.grad
-            other.grad += self.data * out.grad
+            self.grad += reshape_gradient(other.data * out.grad, self.grad.shape)
+            other.grad += reshape_gradient(self.data * out.grad, other.grad.shape)
 
         out._backward = _backward
         return out
@@ -132,8 +132,8 @@ class Tensor:
         out = Tensor(np.matmul(self.data, other.data), (self, other), 'matmul')
 
         def _backward():
-            self.grad += other.data * out.grad
-            other.grad += self.data *out.grad
+            self.grad += np.matmul(out.grad, np.transpose(other.data))
+            other.grad += np.matmul(np.transpose(self.data), out.grad)
 
         out._backward = _backward
         return out
@@ -293,7 +293,17 @@ class Tensor:
         out = Tensor(reg * np.sum(self.data**2), (self,), f"Reg Loss \n(reg={reg})")
 
         def _backward():
-            self.grad += 2 * reg * self.data * out.grad
+            self.grad += np.dot(2 * reg * self.data, np.transpose(out.grad))
+
+        out._backward = _backward
+        return out
+
+    def logistic_loss(self, target) -> 'Tensor':
+        assert isinstance(target, (int, float))
+        out = Tensor(np.log(1 + np.exp(-self.data * target)), (self, ), 'log_loss')
+
+        def _backward():
+            self.grad -= target / (1 + np.exp(self.data * target)) * out.grad
 
         out._backward = _backward
         return out
